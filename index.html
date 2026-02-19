@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CrystalRentals — Квартиры посуточно в Тюмени</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--a:#7c6ef0;--a2:#a78bfa;--a3:#c084fc;--glow:rgba(124,110,240,.15);--gl:rgba(255,255,255,.04);--bd:rgba(255,255,255,.07);--bg:#07060d;--bg2:#0c0b14;--tx:#e2e0ea;--mt:rgba(255,255,255,.45);--gn:#22c55e;--gd:#eab308}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--tx);font-family:'Inter',sans-serif;line-height:1.65;overflow-x:hidden}
+h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;color:#fff;letter-spacing:-.02em}
+a{text-decoration:none;color:inherit}
+.c{max-width:1140px;margin:0 auto;padding:0 1.5rem}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:.75rem 0;background:rgba(7,6,13,.55);backdrop-filter:blur(28px);border-bottom:1px solid var(--bd);transition:all .4s}
+nav.sc{padding:.5rem 0;background:rgba(7,6,13,.95);box-shadow:0 4px 40px rgba(0,0,0,.4)}
+nav .c{display:flex;justify-content:space-between;align-items:center}
+.logo{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:700;display:flex;align-items:center;gap:.5rem;cursor:pointer}
+.lg{width:36px;height:36px;position:relative;display:flex;align-items:center;justify-content:center;animation:gp 3s ease-in-out infinite}
+.lg svg{width:36px;height:36px;animation:crystRot 4s linear infinite;filter:drop-shadow(0 0 8px rgba(124,110,240,.5))}
+@keyframes crystRot{0%{transform:rotateY(0deg)}100%{transform:rotateY(360deg)}}
+@keyframes gp{0%,100%{filter:drop-shadow(0 0 6px rgba(124,110,240,.4))}50%{filter:drop-shadow(0 0 20px rgba(124,110,240,.9))}}
+.nl{display:flex;gap:.15rem;align-items:center}
+.nl a{padding:.45rem .9rem;font-size:.85rem;color:var(--mt);border-radius:8px;transition:all .25s;cursor:pointer}
+.nl a:hover,.nl a.act{color:#fff;background:rgba(255,255,255,.06)}
+.nc{padding:.5rem 1.2rem;background:var(--a);color:#fff!important;border-radius:10px;font-weight:600;font-size:.83rem;transition:all .3s}
+.nc:hover{background:#6d5dd8;transform:translateY(-2px);box-shadow:0 6px 20px rgba(124,110,240,.5)}
+.hb{display:none;background:none;border:none;cursor:pointer;padding:.5rem;flex-direction:column;gap:5px}
+.hb span{display:block;width:22px;height:2px;background:#fff;border-radius:2px;transition:all .3s}
+.mm{display:none;position:fixed;top:54px;left:0;right:0;bottom:0;background:rgba(7,6,13,.98);backdrop-filter:blur(20px);padding:2rem;z-index:199;flex-direction:column;gap:.5rem}
+.mm.op{display:flex;animation:fd .3s}
+.mm a{display:block;padding:1rem;font-size:1.1rem;color:var(--tx);border-radius:12px;transition:background .2s;cursor:pointer}
+.mm a:hover{background:rgba(255,255,255,.05)}
+@keyframes fd{from{opacity:0;transform:translateY(-15px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:768px){.nl{display:none}.hb{display:flex}}
+
+/* PAGES */
+.page{display:none;min-height:100vh;padding-top:60px}
+.page.active{display:block;animation:pageIn .5s ease}
+@keyframes pageIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* ANIM */
+[data-a]{opacity:0;transition:all .8s cubic-bezier(.25,.46,.45,.94)}
+[data-a="u"]{transform:translateY(60px)}
+[data-a="d"]{transform:translateY(-40px)}
+[data-a="l"]{transform:translateX(-60px)}
+[data-a="r"]{transform:translateX(60px)}
+[data-a="s"]{transform:scale(.8)}
+[data-a="f"]{transform:none}
+[data-a="ru"]{transform:translateY(60px) rotate(-5deg)}
+[data-a].v{opacity:1!important;transform:none!important}
+
+/* HERO */
+.hero{padding:8rem 0 5rem;position:relative;overflow:hidden;min-height:calc(100vh - 60px);display:flex;align-items:center}
+.hero::before{content:'';position:absolute;top:-20%;left:50%;transform:translateX(-50%);width:1000px;height:1000px;background:radial-gradient(circle,rgba(124,110,240,.15) 0%,transparent 55%);pointer-events:none;animation:hg 8s ease-in-out infinite}
+@keyframes hg{0%,100%{transform:translateX(-50%) scale(1)}50%{transform:translateX(-50%) scale(1.2)}}
+.hero::after{content:'';position:absolute;bottom:-20%;left:-10%;width:600px;height:600px;background:radial-gradient(circle,rgba(236,72,153,.06) 0%,transparent 60%);pointer-events:none;animation:hg2 12s ease-in-out infinite}
+@keyframes hg2{0%,100%{transform:scale(1)}50%{transform:scale(1.3) translate(30px,-30px)}}
+#pts{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.pt{position:absolute;border-radius:50%;animation:fp linear infinite}
+@keyframes fp{0%{transform:translateY(100vh) rotate(0) scale(0);opacity:0}10%{opacity:.5;transform:translateY(80vh) scale(1)}50%{opacity:.3}100%{transform:translateY(-50px) rotate(900deg) scale(.3);opacity:0}}
+.crystal{position:absolute;pointer-events:none;opacity:.06;animation:crystFloat ease-in-out infinite}
+@keyframes crystFloat{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-30px) rotate(180deg)}}
+.hc{position:relative;z-index:1;max-width:680px}
+.htag{display:inline-flex;align-items:center;gap:.5rem;padding:.4rem 1rem;background:var(--glow);border:1px solid rgba(124,110,240,.25);border-radius:50px;font-size:.78rem;font-weight:500;color:var(--a2);margin-bottom:1.5rem;animation:tf 3s ease-in-out infinite}
+@keyframes tf{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.htag .dot{width:7px;height:7px;background:var(--gn);border-radius:50%;animation:dp 1.5s infinite}
+@keyframes dp{0%,100%{opacity:1;box-shadow:0 0 6px rgba(34,197,94,.6)}50%{opacity:.3;box-shadow:none}}
+.hero h1{font-size:3.6rem;font-weight:700;line-height:1.08;margin-bottom:1.2rem}
+.gr{background:linear-gradient(135deg,var(--a2),#e879f9,var(--a));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-size:300% 300%;animation:gs 5s ease infinite}
+@keyframes gs{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.hero p{font-size:1.12rem;color:var(--mt);line-height:1.75;margin-bottom:2.5rem}
+.hbtns{display:flex;gap:1rem;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:.5rem;font-family:'Space Grotesk',sans-serif;font-weight:600;border:none;border-radius:12px;cursor:pointer;transition:all .35s cubic-bezier(.4,0,.2,1);font-size:.95rem;padding:.9rem 2rem}
+.bp{background:linear-gradient(135deg,var(--a),#9333ea);color:#fff;box-shadow:0 4px 25px rgba(124,110,240,.35);position:relative;overflow:hidden}
+.bp::after{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:linear-gradient(45deg,transparent 40%,rgba(255,255,255,.1) 50%,transparent 60%);transition:all .6s;transform:translateX(-100%)}
+.bp:hover::after{transform:translateX(100%)}
+.bp:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 12px 45px rgba(124,110,240,.55)}
+.bo{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.12)}
+.bo:hover{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.25);transform:translateY(-2px)}
+.bs{padding:.6rem 1.3rem;font-size:.85rem;border-radius:10px}
+.hero-fl{position:absolute;right:0;top:50%;transform:translateY(-50%);width:390px;z-index:1;display:none}
+@media(min-width:1024px){.hero-fl{display:block}.hero .c{position:relative}}
+.fc{background:rgba(255,255,255,.03);border:1px solid var(--bd);border-radius:14px;padding:1rem;backdrop-filter:blur(16px);margin-bottom:.7rem;transition:all .3s}
+.fc:hover{border-color:rgba(124,110,240,.25);transform:translateX(-8px)}
+.fc:nth-child(1){margin-left:2rem;animation:f1 6s ease-in-out infinite}
+.fc:nth-child(2){animation:f2 7s ease-in-out infinite}
+.fc:nth-child(3){margin-left:3rem;animation:f3 8s ease-in-out infinite}
+@keyframes f1{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+@keyframes f2{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-10px) rotate(1deg)}}
+@keyframes f3{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.fcr{display:flex;align-items:center;gap:.65rem}
+.fci{width:36px;height:36px;background:var(--glow);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1rem}
+.fct{font-weight:600;font-size:.88rem}
+.fcs{font-size:.73rem;color:var(--mt)}
+.fcp{font-family:'Space Grotesk',sans-serif;font-size:1.15rem;font-weight:700;color:var(--a2);margin-top:.25rem}
+
+/* STATS */
+.stb{padding:2.5rem 0;border-top:1px solid var(--bd);border-bottom:1px solid var(--bd);background:var(--bg2)}
+.str{display:flex;justify-content:center;gap:4rem;flex-wrap:wrap}
+.st{text-align:center}
+.stn{font-family:'Space Grotesk',sans-serif;font-size:2.5rem;font-weight:700;background:linear-gradient(135deg,#fff 20%,var(--a2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.stl{font-size:.83rem;color:var(--mt);margin-top:.2rem}
+
+/* SECTION */
+section{padding:5rem 0}
+.sh{text-align:center;margin-bottom:3rem}
+.sh h2{font-size:2rem;font-weight:700;margin-bottom:.6rem}
+.sh p{color:var(--mt);max-width:540px;margin:0 auto}
+.dbg{background:var(--bg2)}
+
+/* APT CARDS */
+.ag{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1.5rem}
+.ac{background:var(--gl);border:1px solid var(--bd);border-radius:20px;overflow:hidden;transition:all .45s cubic-bezier(.4,0,.2,1);cursor:pointer;position:relative}
+.ac:hover{border-color:rgba(124,110,240,.4);transform:translateY(-8px) scale(1.01);box-shadow:0 30px 70px rgba(124,110,240,.12)}
+.ac::before{content:'';position:absolute;inset:-1px;border-radius:20px;background:linear-gradient(135deg,rgba(124,110,240,.2),transparent,rgba(192,132,252,.15));opacity:0;transition:opacity .4s;pointer-events:none;z-index:0}
+.ac:hover::before{opacity:1}
+.ai{height:210px;position:relative;overflow:hidden}
+.aib{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:3.8rem;transition:all .7s cubic-bezier(.4,0,.2,1)}
+.ac:hover .aib{transform:scale(1.1) rotate(2deg)}
+.g1{background:linear-gradient(135deg,#1e1b4b,#312e81)}.g2{background:linear-gradient(135deg,#134e4a,#1e3a5f)}.g3{background:linear-gradient(135deg,#3b0764,#581c87)}.g4{background:linear-gradient(135deg,#1a1a2e,#16213e)}.g5{background:linear-gradient(135deg,#0f3460,#1a1a2e)}.g6{background:linear-gradient(135deg,#2d1b69,#11998e)}.g7{background:linear-gradient(135deg,#1b2838,#2a4858)}.g8{background:linear-gradient(135deg,#2b1055 0%,#d53369 120%)}
+.ab{position:absolute;top:.8rem;left:.8rem;padding:.25rem .7rem;border-radius:7px;font-size:.72rem;font-weight:600;backdrop-filter:blur(8px);z-index:2}
+.b1{background:rgba(124,110,240,.85);color:#fff}.b2{background:rgba(34,197,94,.85);color:#fff}.b3{background:rgba(234,179,8,.85);color:#000}.b4{background:rgba(236,72,153,.85);color:#fff}.b5{background:rgba(59,130,246,.85);color:#fff}
+.ain{padding:1.3rem}
+.ain h3{font-size:1.05rem;margin-bottom:.35rem}
+.aloc{font-size:.8rem;color:var(--mt);margin-bottom:.25rem}
+.aadr{font-size:.77rem;color:var(--a2);margin-bottom:.6rem}
+.atgs{display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:.6rem}
+.atg{padding:.2rem .5rem;background:rgba(255,255,255,.05);border:1px solid var(--bd);border-radius:6px;font-size:.7rem;color:var(--mt)}
+.adsc{font-size:.8rem;color:var(--mt);line-height:1.5;margin-bottom:.8rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.aft{display:flex;justify-content:space-between;align-items:center;padding-top:.8rem;border-top:1px solid var(--bd)}
+.apr{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:700}
+.ape{font-size:.73rem;color:var(--mt)}
+
+/* FEATURES */
+.fg{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.2rem}
+.fcd{background:var(--gl);border:1px solid var(--bd);border-radius:16px;padding:1.6rem;transition:all .4s;position:relative;overflow:hidden}
+.fcd::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:2px;background:linear-gradient(90deg,transparent,var(--a),var(--a3),transparent);transition:left .6s}
+.fcd:hover::before{left:100%}
+.fcd:hover{border-color:rgba(124,110,240,.2);transform:translateY(-5px);box-shadow:0 15px 40px rgba(0,0,0,.15)}
+.fico{width:48px;height:48px;background:var(--glow);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.35rem;margin-bottom:.9rem;transition:all .4s}
+.fcd:hover .fico{transform:scale(1.15) rotate(8deg);box-shadow:0 0 20px rgba(124,110,240,.3)}
+.fcd h3{font-size:1rem;margin-bottom:.35rem}
+.fcd p{font-size:.87rem;color:var(--mt)}
+
+/* LOCATIONS */
+.lg2{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:.9rem}
+.lc{background:var(--gl);border:1px solid var(--bd);border-radius:12px;padding:1.1rem;text-align:center;transition:all .4s}
+.lc:hover{border-color:rgba(124,110,240,.3);transform:translateY(-5px) scale(1.03);box-shadow:0 12px 30px rgba(0,0,0,.15)}
+.lci{font-size:1.8rem;margin-bottom:.4rem;transition:transform .4s}
+.lc:hover .lci{transform:scale(1.25) rotate(10deg)}
+.lc h4{font-size:.85rem;margin-bottom:.15rem}
+.lc p{font-size:.73rem;color:var(--mt)}
+
+/* REVIEWS */
+.rg{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:1.2rem}
+.rc{background:var(--gl);border:1px solid var(--bd);border-radius:16px;padding:1.6rem;position:relative;transition:all .4s}
+.rc:hover{border-color:rgba(124,110,240,.2);transform:translateY(-4px)}
+.rq{position:absolute;top:.5rem;right:1.1rem;font-size:3.5rem;color:rgba(124,110,240,.08);font-family:Georgia,serif;line-height:1}
+.rs{color:var(--gd);font-size:.88rem;margin-bottom:.65rem;letter-spacing:2px}
+.rt{font-size:.9rem;color:rgba(255,255,255,.7);margin-bottom:1rem;line-height:1.7;font-style:italic}
+.rm{display:flex;align-items:center;gap:.7rem}
+.ra{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--a),#e879f9);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.83rem;color:#fff}
+.rn{font-weight:600;font-size:.85rem}
+.rd{font-size:.72rem;color:var(--mt)}
+.rap{display:inline-block;margin-top:.65rem;padding:.18rem .55rem;background:rgba(124,110,240,.1);border-radius:5px;font-size:.7rem;color:var(--a2)}
+
+/* REVIEW SUMMARY */
+.rsm{display:flex;align-items:center;gap:2.5rem;padding:2rem;background:var(--gl);border:1px solid var(--bd);border-radius:20px;margin-bottom:2rem;flex-wrap:wrap}
+.rsm-score{text-align:center}
+.rsm-num{font-family:'Space Grotesk',sans-serif;font-size:4rem;font-weight:700;background:linear-gradient(135deg,#fff,var(--a2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.rsm-stars{color:var(--gd);font-size:1.3rem;margin:.3rem 0}
+.rsm-count{font-size:.8rem;color:var(--mt)}
+.rsm-bars{flex:1;min-width:250px}
+.bar-row{display:flex;align-items:center;gap:.6rem;margin-bottom:.4rem;font-size:.8rem;color:var(--mt)}
+.bar-row span:first-child{width:15px;text-align:right}
+.bar-track{flex:1;height:8px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden}
+.bar-fill{height:100%;background:var(--gd);border-radius:4px;transition:width 1.5s ease}
+.bar-row span:last-child{width:35px}
+
+/* CONTACTS */
+.cg{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.2rem}
+.cc{background:var(--gl);border:1px solid var(--bd);border-radius:16px;padding:1.8rem;text-align:center;transition:all .4s}
+.cc:hover{border-color:rgba(124,110,240,.35);transform:translateY(-6px);box-shadow:0 18px 50px rgba(0,0,0,.2)}
+.cci{width:56px;height:56px;margin:0 auto .9rem;background:var(--glow);border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;transition:all .4s}
+.cc:hover .cci{transform:scale(1.2) rotate(8deg);box-shadow:0 0 25px rgba(124,110,240,.3)}
+.cc h3{font-size:1rem;margin-bottom:.3rem}
+.cc a{color:var(--a2);font-weight:600;font-size:1rem;transition:color .2s}
+.cc a:hover{color:#fff}
+.cc .sub{color:var(--mt);font-size:.78rem;margin-top:.25rem}
+
+/* CTA */
+.cta{background:linear-gradient(135deg,rgba(124,110,240,.1),rgba(147,51,234,.08));border:1px solid rgba(124,110,240,.18);border-radius:24px;padding:3.5rem 2.5rem;text-align:center;position:relative;overflow:hidden}
+.cta::before{content:'';position:absolute;top:-50%;left:-30%;width:160%;height:160%;background:radial-gradient(circle at 30% 50%,rgba(124,110,240,.08),transparent 50%);pointer-events:none;animation:ctg 7s ease-in-out infinite}
+@keyframes ctg{0%,100%{transform:translate(0,0) rotate(0)}50%{transform:translate(20px,-20px) rotate(3deg)}}
+.cta h2{font-size:1.8rem;margin-bottom:.7rem;position:relative}
+.cta p{color:var(--mt);margin-bottom:1.8rem;max-width:460px;margin-left:auto;margin-right:auto;position:relative}
+
+/* FAQ */
+.fi{border-bottom:1px solid var(--bd)}
+.fq{padding:1.15rem 0;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:600;font-family:'Space Grotesk',sans-serif;font-size:.95rem;color:#fff;transition:color .2s;gap:1rem}
+.fq:hover{color:var(--a2)}
+.fqi{width:26px;height:26px;min-width:26px;border-radius:7px;background:var(--gl);border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;font-size:1rem;color:var(--a2);transition:all .4s}
+.fa{max-height:0;overflow:hidden;transition:all .4s cubic-bezier(.4,0,.2,1);color:var(--mt);font-size:.9rem;line-height:1.7}
+.fi.op .fa{max-height:200px;padding-bottom:1.1rem}
+.fi.op .fqi{transform:rotate(45deg);background:var(--glow)}
+
+/* MODAL */
+.mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(12px);z-index:300;align-items:center;justify-content:center;padding:1rem}
+.mo.op{display:flex;animation:mfi .25s}
+@keyframes mfi{from{opacity:0}to{opacity:1}}
+.md{background:var(--bg2);border:1px solid var(--bd);border-radius:24px;max-width:680px;width:100%;max-height:90vh;overflow-y:auto;position:relative;animation:mpi .45s cubic-bezier(.34,1.56,.64,1)}
+@keyframes mpi{from{opacity:0;transform:scale(.82) translateY(40px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.mx{position:sticky;top:.8rem;float:right;margin-right:.8rem;width:34px;height:34px;background:rgba(255,255,255,.1);border:none;border-radius:50%;color:#fff;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;transition:all .3s;backdrop-filter:blur(8px)}
+.mx:hover{background:rgba(255,255,255,.2);transform:rotate(90deg) scale(1.1)}
+.mh{width:100%;height:240px;display:flex;align-items:center;justify-content:center;font-size:4.5rem;border-radius:24px 24px 0 0;position:relative}
+.mh::after{content:'';position:absolute;bottom:0;left:0;right:0;height:80px;background:linear-gradient(transparent,var(--bg2))}
+.mb{padding:0 1.8rem 1.8rem}
+.mb h2{font-size:1.4rem;margin-bottom:.25rem}
+.mb .ml{color:var(--a2);font-size:.88rem;margin-bottom:.2rem}
+.mb .ma{color:var(--mt);font-size:.83rem;margin-bottom:1rem}
+.mp{font-family:'Space Grotesk',sans-serif;font-size:1.8rem;font-weight:700;background:linear-gradient(135deg,var(--a2),#e879f9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:1.1rem}
+.mds{color:var(--mt);line-height:1.8;margin-bottom:1.3rem;font-size:.93rem}
+.mfs{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:1.3rem}
+.mf{display:flex;align-items:center;gap:.4rem;font-size:.85rem;padding:.45rem .65rem;background:var(--gl);border:1px solid var(--bd);border-radius:9px;transition:all .2s}
+.mf:hover{border-color:rgba(124,110,240,.25);background:var(--glow)}
+
+/* BTT */
+.btt{position:fixed;bottom:2rem;right:2rem;width:46px;height:46px;background:linear-gradient(135deg,var(--a),#9333ea);border:none;border-radius:50%;color:#fff;font-size:1.1rem;cursor:pointer;opacity:0;transform:translateY(20px) scale(.8);transition:all .4s;z-index:100;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 25px rgba(124,110,240,.45)}
+.btt.v{opacity:1;transform:translateY(0) scale(1)}
+.btt:hover{transform:translateY(-4px) scale(1.12);box-shadow:0 10px 40px rgba(124,110,240,.65)}
+
+/* MARQUEE */
+.marq{overflow:hidden;padding:1rem 0;border-bottom:1px solid var(--bd)}
+.marq-inner{display:flex;gap:3rem;animation:scroll 30s linear infinite;white-space:nowrap}
+.marq-inner span{color:var(--mt);font-size:.85rem;font-weight:500}
+.marq-inner .dot2{color:var(--a);margin:0 .5rem}
+@keyframes scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* AVITO */
+.avb{display:inline-flex;align-items:center;gap:.5rem;padding:.7rem 1.3rem;background:var(--gl);border:1px solid var(--bd);border-radius:12px;font-size:.88rem;color:var(--mt);transition:all .3s}
+.avb:hover{border-color:rgba(124,110,240,.2)}
+.avb a{color:var(--a2);font-weight:600}
+
+/* ABOUT GRID */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;align-items:start}
+
+/* FILTER BTNS */
+.filter-btn{display:inline-block;padding:.5rem 1.3rem;background:var(--gl);border:1px solid var(--bd);border-radius:10px;font-size:.85rem;color:var(--mt);cursor:pointer;transition:all .25s;margin-bottom:1.5rem;margin-right:.4rem}
+.filter-btn:hover,.filter-btn.act{background:rgba(124,110,240,.15);border-color:rgba(124,110,240,.3);color:#fff}
+
+/* PRICING TABLE */
+.price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;margin:2rem 0}
+.price-card{background:var(--gl);border:1px solid var(--bd);border-radius:16px;padding:2rem;text-align:center;transition:all .4s;position:relative;overflow:hidden}
+.price-card:hover{border-color:rgba(124,110,240,.3);transform:translateY(-5px)}
+.price-card.pop{border-color:rgba(124,110,240,.3);background:rgba(124,110,240,.06)}
+.price-card.pop::before{content:'Популярно';position:absolute;top:12px;right:-28px;background:var(--a);color:#fff;font-size:.65rem;font-weight:700;padding:.2rem 2rem;transform:rotate(45deg)}
+.price-val{font-family:'Space Grotesk',sans-serif;font-size:2.2rem;font-weight:700;color:var(--gn);margin:.5rem 0}
+.price-lbl{font-size:.85rem;color:var(--mt)}
+.price-desc{font-size:.8rem;color:var(--mt);margin-top:.5rem}
+
+/* FOOTER */
+footer{padding:2rem 0;border-top:1px solid var(--bd);text-align:center}
+footer .logo{justify-content:center;margin-bottom:.8rem}
+footer p{color:var(--mt);font-size:.78rem}
+footer a{color:var(--a2)}
+
+@keyframes crystalSpin{0%{transform:rotate(0) scale(1)}25%{transform:rotate(5deg) scale(1.05)}50%{transform:rotate(0) scale(1)}75%{transform:rotate(-5deg) scale(1.05)}100%{transform:rotate(0) scale(1)}}
+
+@media(max-width:768px){
+.hero{padding:5rem 0 3rem;min-height:auto}.hero h1{font-size:2.1rem}.ag{grid-template-columns:1fr}.rg{grid-template-columns:1fr}.str{gap:1.8rem}.stn{font-size:1.8rem}.cta{padding:2.5rem 1.5rem}.hbtns{flex-direction:column}.btn{width:100%;justify-content:center}.mfs{grid-template-columns:1fr}.mh{height:170px}.about-grid{grid-template-columns:1fr}.price-grid{grid-template-columns:1fr}.rsm{flex-direction:column;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nb"><div class="c">
+<a class="logo" onclick="go('home')"><div class="lg"><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="cg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#a78bfa"/><stop offset="50%" style="stop-color:#7c6ef0"/><stop offset="100%" style="stop-color:#c084fc"/></linearGradient></defs><polygon points="50,5 85,35 75,90 25,90 15,35" fill="url(#cg)" opacity=".9"/><polygon points="50,5 85,35 50,45 15,35" fill="#c4b5fd" opacity=".6"/><polygon points="50,45 85,35 75,90" fill="#7c6ef0" opacity=".5"/><polygon points="50,45 15,35 25,90" fill="#a78bfa" opacity=".4"/><line x1="50" y1="5" x2="50" y2="45" stroke="#e9d5ff" stroke-width="1" opacity=".5"/><line x1="50" y1="45" x2="75" y2="90" stroke="#c4b5fd" stroke-width=".8" opacity=".3"/><line x1="50" y1="45" x2="25" y2="90" stroke="#c4b5fd" stroke-width=".8" opacity=".3"/></svg></div>CrystalRentals</a>
+<div class="nl" id="navLinks">
+<a onclick="go('home')" data-page="home" class="act">Главная</a>
+<a onclick="go('apartments')" data-page="apartments">Квартиры</a>
+<a onclick="go('about')" data-page="about">О компании</a>
+<a onclick="go('reviews')" data-page="reviews">Отзывы</a>
+<a onclick="go('contacts')" data-page="contacts" class="nc">📞 Контакты</a>
+</div>
+<button class="hb" onclick="document.getElementById('mmenu').classList.toggle('op')"><span></span><span></span><span></span></button>
+</div></nav>
+<div class="mm" id="mmenu">
+<a onclick="go('home');this.parentElement.classList.remove('op')">🏠 Главная</a>
+<a onclick="go('apartments');this.parentElement.classList.remove('op')">🏢 Квартиры</a>
+<a onclick="go('about');this.parentElement.classList.remove('op')">💎 О компании</a>
+<a onclick="go('reviews');this.parentElement.classList.remove('op')">⭐ Отзывы</a>
+<a onclick="go('contacts');this.parentElement.classList.remove('op')">📞 Контакты</a>
+</div>
+
+<!-- ==================== PAGE: HOME ==================== -->
+<div id="page-home" class="page active">
+
+<!-- HERO -->
+<section class="hero"><div id="pts"></div>
+<div class="c">
+<div class="hc">
+<div class="htag"><span class="dot"></span> 695 отзывов · рейтинг 4.8 · 3+ лет</div>
+<h1>Квартиры посуточно<br><span class="gr">в Тюмени</span></h1>
+<p>CrystalRentals — сеть из 20+ квартир с дизайнерским ремонтом в лучших районах города. Бесконтактное заселение за 5 минут, кристальная чистота, поддержка 24/7.</p>
+<div class="hbtns">
+<a onclick="go('apartments')" class="btn bp">💎 Выбрать квартиру</a>
+<a href="https://www.avito.ru/brands/i78514292" target="_blank" class="btn bo">⭐ Мы на Авито</a>
+</div>
+</div>
+<div class="hero-fl">
+<div class="fc"><div class="fcr"><div class="fci">⭐</div><div><div class="fct">Рейтинг 4.8 на Авито</div><div class="fcs">695 подтверждённых оценок</div></div></div></div>
+<div class="fc"><div class="fcr"><div class="fci">🏠</div><div><div class="fct">20+ квартир в Тюмени</div><div class="fcs">Студии · 1-к · 2-к квартиры</div></div></div><div class="fcp">от 1 800 ₽/сут</div></div>
+<div class="fc"><div class="fcr"><div class="fci">⚡</div><div><div class="fct">Заселение за 5 минут</div><div class="fcs">Электронный замок · без встреч</div></div></div></div>
+</div>
+</div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marq"><div class="marq-inner" id="marqI"></div></div>
+
+<!-- STATS -->
+<div class="stb"><div class="c"><div class="str">
+<div class="st"><div class="stn" data-c="695">0</div><div class="stl">Оценок на Авито</div></div>
+<div class="st"><div class="stn" data-c="4.8" data-d>0</div><div class="stl">Средний рейтинг</div></div>
+<div class="st"><div class="stn" data-c="20" data-s="+">0</div><div class="stl">Квартир в фонде</div></div>
+<div class="st"><div class="stn" data-c="3" data-s="+ лет">0</div><div class="stl">На рынке</div></div>
+</div></div></div>
+
+<!-- AVITO SECTION -->
+<section style="padding:3rem 0"><div class="c"><div style="text-align:center" data-a="s">
+<div style="background:linear-gradient(135deg,rgba(124,110,240,.08),rgba(34,197,94,.06));border:1px solid rgba(124,110,240,.18);border-radius:24px;padding:2.5rem;display:inline-block;max-width:700px;width:100%">
+<div style="font-size:3rem;margin-bottom:.8rem">⭐</div>
+<h2 style="font-size:1.6rem;margin-bottom:.5rem">Мы на Авито</h2>
+<p style="color:var(--mt);margin-bottom:.4rem">Официальный профиль CrystalRentals</p>
+<div style="display:flex;justify-content:center;gap:2rem;margin:1.2rem 0;flex-wrap:wrap">
+<div><div style="font-family:'Space Grotesk';font-size:1.8rem;font-weight:700;color:var(--gd)">4.8</div><div style="font-size:.8rem;color:var(--mt)">рейтинг</div></div>
+<div><div style="font-family:'Space Grotesk';font-size:1.8rem;font-weight:700;color:var(--a2)">695</div><div style="font-size:.8rem;color:var(--mt)">отзывов</div></div>
+<div><div style="font-family:'Space Grotesk';font-size:1.8rem;font-weight:700;color:var(--gn)">625</div><div style="font-size:.8rem;color:var(--mt)">пятёрок</div></div>
+<div><div style="font-family:'Space Grotesk';font-size:1.8rem;font-weight:700;color:#fff">16</div><div style="font-size:.8rem;color:var(--mt)">квартир</div></div>
+</div>
+<a href="https://www.avito.ru/brands/i78514292" target="_blank" class="btn bp" style="margin-top:.5rem">⭐ Перейти на Авито</a>
+</div></div></div></section>
+
+<!-- FEATURES PREVIEW -->
+<section class="dbg"><div class="c">
+<div class="sh" data-a="u"><h2>Почему CrystalRentals?</h2><p>Мы не просто сдаём квартиры — мы создаём впечатления</p></div>
+<div class="fg">
+<div class="fcd" data-a="u"><div class="fico">⚡</div><h3>Заселение за 5 минут</h3><p>Электронный замок, онлайн-инструкция. Заезжайте в любое время без встреч и ожиданий.</p></div>
+<div class="fcd" data-a="u"><div class="fico">💎</div><h3>Кристальная чистота</h3><p>Профессиональная уборка, свежее бельё, полотенца, премиальная косметика в каждой квартире.</p></div>
+<div class="fcd" data-a="u"><div class="fico">📍</div><h3>Лучшие адреса Тюмени</h3><p>Профсоюзная, Монтажников, Сперанского, Трофимовой, Протозанова, Харьковская, 50 лет Октября — различные районы города.</p></div>
+<div class="fcd" data-a="u"><div class="fico">📄</div><h3>Документы для отчёта</h3><p>Договор, чек, акт выполненных работ. Безналичный расчёт для ИП и юрлиц.</p></div>
+<div class="fcd" data-a="u"><div class="fico">💳</div><h3>Дешевле гостиниц</h3><p>От 1 800 ₽/сутки. Скидки от 7 дней: -10%. От 14 дней: -15%. От 30 — индивидуально.</p></div>
+<div class="fcd" data-a="u"><div class="fico">💬</div><h3>Поддержка 24/7</h3><p>Всегда на связи. Оперативно решаем любые вопросы.</p></div>
+</div>
+</div></section>
+
+<!-- CTA -->
+<section><div class="c"><div data-a="s"><div class="cta">
+<h2>Забронируйте прямо сейчас</h2>
+<p>Расскажите, что ищете — мы подберём идеальную квартиру</p>
+<div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+<a onclick="go('apartments')" class="btn bp">💎 Выбрать квартиру</a>
+<a href="https://www.avito.ru/brands/i78514292" target="_blank" class="btn bo">⭐ Забронировать на Авито</a>
+</div>
+</div></div></div></section>
+
+</div>
+
+<!-- ==================== PAGE: APARTMENTS ==================== -->
+<div id="page-apartments" class="page">
+
+<section><div class="c">
+<div class="sh" data-a="u"><h2>Наши квартиры</h2><p>16 вариантов с реальными адресами — от 1 800 ₽/сутки</p></div>
+<div id="flt"></div>
+<div class="ag" id="aGrid"></div>
+</div></section>
+
+<!-- PRICING -->
+<section class="dbg"><div class="c">
+<div class="sh" data-a="u"><h2>Скидки при длительном проживании</h2><p>Чем дольше — тем выгоднее</p></div>
+<div class="price-grid">
+<div class="price-card" data-a="u"><div style="font-size:2rem;margin-bottom:.5rem">📅</div><div class="price-lbl">от 7 суток</div><div class="price-val">-10%</div><div class="price-desc">Экономия до 2 100 ₽ за неделю</div></div>
+<div class="price-card pop" data-a="u"><div style="font-size:2rem;margin-bottom:.5rem">🔥</div><div class="price-lbl">от 14 суток</div><div class="price-val">-15%</div><div class="price-desc">Максимальная фиксированная скидка</div></div>
+<div class="price-card" data-a="u"><div style="font-size:2rem;margin-bottom:.5rem">💎</div><div class="price-lbl">от 30 суток</div><div class="price-val">💬</div><div class="price-desc">Индивидуальные условия</div></div>
+</div>
+</div></section>
+
+<!-- LOCATIONS -->
+<section><div class="c">
+<div class="sh" data-a="u"><h2>Рядом с нашими квартирами</h2><p>Подберём жильё в пешей доступности от нужного объекта</p></div>
+<div class="lg2">
+<div class="lc" data-a="u"><div class="lci">🎾</div><h4>Теннисный корт</h4><p>Пешком</p></div>
+<div class="lc" data-a="u"><div class="lci">👶</div><h4>«Мать и Дитя»</h4><p>5 мин на авто</p></div>
+<div class="lc" data-a="u"><div class="lci">🧠</div><h4>Центр нейрохирургии</h4><p>Федеральный</p></div>
+<div class="lc" data-a="u"><div class="lci">🌍</div><h4>ИЦ «Геосфера»</h4><p>Рядом</p></div>
+<div class="lc" data-a="u"><div class="lci">🏢</div><h4>БЦ «Столыпин»</h4><p>Деловой</p></div>
+<div class="lc" data-a="u"><div class="lci">🛍️</div><h4>ТЦ Гудвин·Магеллан·Кристалл</h4><p>Шаговая доступность</p></div>
+</div>
+</div></section>
+
+</div>
+
+<!-- ==================== PAGE: ABOUT ==================== -->
+<div id="page-about" class="page">
+
+<section><div class="c">
+<div class="about-grid">
+<div data-a="l">
+<h2 style="font-size:1.7rem;margin-bottom:1rem">О компании <span class="gr">CrystalRentals</span></h2>
+<p style="color:var(--mt);margin-bottom:.8rem;line-height:1.8">Более 3 лет мы в сфере посуточной аренды в Тюмени. За это время создали уютный дом для сотен путешественников и гостей города.</p>
+<p style="color:var(--mt);margin-bottom:.8rem;line-height:1.8">Наш дружный коллектив предлагает более 20 квартир — каждая продумана до мелочей. Командировка, отпуск, романтический вечер — у нас есть вариант для каждого.</p>
+<p style="color:var(--mt);margin-bottom:.8rem;line-height:1.8">Мы — команда профессионалов, которая поможет быстро и легко найти идеальную квартиру. Полностью оборудованные: мебель, техника, посуда, Wi-Fi и свежее постельное бельё.</p>
+<p style="color:var(--mt);margin-bottom:1.2rem;line-height:1.8">695 отзывов и рейтинг 4.8 — лучшее доказательство нашего сервиса.</p>
+<a href="https://www.avito.ru/brands/i78514292" target="_blank" class="btn bp bs">⭐ Наш профиль на Авито</a>
+</div>
+<div data-a="r" style="background:var(--gl);border:1px solid var(--bd);border-radius:24px;padding:2.5rem;text-align:center">
+<div style="font-size:5rem;animation:crystalSpin 10s linear infinite">💎</div>
+<h3 style="font-size:1.4rem;margin:.8rem 0 .4rem">CrystalRentals</h3>
+<p style="color:var(--mt);font-size:.9rem">Кристальная чистота · Комфорт · Сервис</p>
+<div style="margin-top:1.5rem;display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap">
+<div><div style="font-family:'Space Grotesk';font-size:1.5rem;font-weight:700;color:var(--a2)">695</div><div class="stl">отзывов</div></div>
+<div><div style="font-family:'Space Grotesk';font-size:1.5rem;font-weight:700;color:var(--a2)">4.8</div><div class="stl">рейтинг</div></div>
+<div><div style="font-family:'Space Grotesk';font-size:1.5rem;font-weight:700;color:var(--a2)">16</div><div class="stl">квартир</div></div>
+</div>
+</div>
+</div>
+</div></section>
+
+<!-- FEATURES FULL -->
+<section class="dbg"><div class="c">
+<div class="sh" data-a="u"><h2>Наши преимущества</h2><p>Почему гости выбирают CrystalRentals</p></div>
+<div class="fg">
+<div class="fcd" data-a="u"><div class="fico">⚡</div><h3>Заселение за 5 минут</h3><p>Электронный замок, онлайн-инструкция. Заезжайте в любое время без встреч и ожиданий.</p></div>
+<div class="fcd" data-a="u"><div class="fico">💎</div><h3>Кристальная чистота</h3><p>Профессиональная уборка, свежее бельё, полотенца, премиальная косметика в каждой квартире.</p></div>
+<div class="fcd" data-a="u"><div class="fico">📍</div><h3>Лучшие адреса Тюмени</h3><p>Профсоюзная, Монтажников, Сперанского, Трофимовой, Протозанова, Харьковская, 50 лет Октября — различные районы города.</p></div>
+<div class="fcd" data-a="u"><div class="fico">📄</div><h3>Документы для отчёта</h3><p>Договор, чек, акт выполненных работ. Безналичный расчёт для ИП и юрлиц.</p></div>
+<div class="fcd" data-a="u"><div class="fico">💳</div><h3>Дешевле гостиниц</h3><p>От 1 800 ₽/сутки. Скидки от 7 дней: -10%. От 14 дней: -15%. От 30 — индивидуально.</p></div>
+<div class="fcd" data-a="u"><div class="fico">💬</div><h3>Поддержка 24/7</h3><p>Всегда на связи. Оперативно решаем любые вопросы.</p></div>
+</div>
+</div></section>
+
+<!-- FAQ -->
+<section><div class="c">
+<div class="sh" data-a="u"><h2>Частые вопросы</h2></div>
+<div style="max-width:700px;margin:0 auto" id="faqB"></div>
+</div></section>
+
+</div>
+
+<!-- ==================== PAGE: REVIEWS ==================== -->
+<div id="page-reviews" class="page">
+
+<section><div class="c">
+<div class="sh" data-a="u"><h2>Отзывы гостей с Авито</h2><p>Рейтинг 4.8 из 5 · 695 оценок · 625 пятёрок</p></div>
+
+<!-- Rating summary -->
+<div class="rsm" data-a="u">
+<div class="rsm-score">
+<div class="rsm-num">4.8</div>
+<div class="rsm-stars">★★★★★</div>
+<div class="rsm-count">695 оценок</div>
+</div>
+<div class="rsm-bars">
+<div class="bar-row"><span>5</span><div class="bar-track"><div class="bar-fill" style="width:89.9%"></div></div><span>625</span></div>
+<div class="bar-row"><span>4</span><div class="bar-track"><div class="bar-fill" style="width:3.6%"></div></div><span>25</span></div>
+<div class="bar-row"><span>3</span><div class="bar-track"><div class="bar-fill" style="width:2.7%"></div></div><span>19</span></div>
+<div class="bar-row"><span>2</span><div class="bar-track"><div class="bar-fill" style="width:1%"></div></div><span>7</span></div>
+<div class="bar-row"><span>1</span><div class="bar-track"><div class="bar-fill" style="width:2.7%"></div></div><span>19</span></div>
+</div>
+</div>
+
+<div class="rg" id="rGrid"></div>
+<div style="text-align:center;margin-top:2rem" data-a="u"><a href="https://www.avito.ru/brands/i78514292" target="_blank" class="btn bp">⭐ Все 695 отзывов на Авито</a></div>
+</div></section>
+
+</div>
+
+<!-- ==================== PAGE: CONTACTS ==================== -->
+<div id="page-contacts" class="page">
+
+<section><div class="c">
+<div class="sh" data-a="u"><h2>Контакты</h2><p>Свяжитесь — подберём квартиру за 5 минут</p></div>
+<div class="cg">
+<div class="cc" data-a="u"><div class="cci">📞</div><h3>Телефон</h3><a href="tel:+79001234567">+7 (900) 123-45-67</a><p class="sub">Ежедневно 9:00–22:00</p></div>
+<div class="cc" data-a="u"><div class="cci">💬</div><h3>WhatsApp</h3><a href="https://wa.me/79001234567">Написать</a><p class="sub">Отвечаем за 5 мин</p></div>
+<div class="cc" data-a="u"><div class="cci">⭐</div><h3>Авито</h3><a href="https://www.avito.ru/brands/i78514292" target="_blank">CrystalRentals</a><p class="sub">Все квартиры и фото</p></div>
+<div class="cc" data-a="u"><div class="cci">📍</div><h3>Город</h3><a>Тюмень</a><p class="sub">20+ квартир в разных районах</p></div>
+</div>
+
+<div style="margin-top:3rem" data-a="s"><div class="cta">
+<h2>Забронируйте прямо сейчас</h2>
+<p>Расскажите, что ищете — мы подберём идеальную квартиру</p>
+<a href="https://www.avito.ru/brands/i78514292" target="_blank" class="btn bp">💎 Забронировать на Авито</a>
+</div></div>
+</div></section>
+
+</div>
+
+<!-- ==================== SHARED ==================== -->
+
+<!-- MODAL -->
+<div class="mo" id="modal" onclick="if(event.target===this)cM()"><div class="md"><button class="mx" onclick="cM()">✕</button><div class="mh" id="mH"></div><div class="mb" id="mB"></div></div></div>
+
+<button class="btt" id="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<footer><div class="c">
+<div class="logo" style="justify-content:center;margin-bottom:.8rem;cursor:default"><div class="lg"><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="cg2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#a78bfa"/><stop offset="50%" style="stop-color:#7c6ef0"/><stop offset="100%" style="stop-color:#c084fc"/></linearGradient></defs><polygon points="50,5 85,35 75,90 25,90 15,35" fill="url(#cg2)" opacity=".9"/><polygon points="50,5 85,35 50,45 15,35" fill="#c4b5fd" opacity=".6"/><polygon points="50,45 85,35 75,90" fill="#7c6ef0" opacity=".5"/><polygon points="50,45 15,35 25,90" fill="#a78bfa" opacity=".4"/></svg></div>CrystalRentals</div>
+<p>© 2026 <a href="https://www.avito.ru/brands/i78514292" target="_blank">CrystalRentals</a> — квартиры посуточно в Тюмени · 695 отзывов · рейтинг 4.8</p>
+</div></footer>
+
+<script>
+// DATA
+const D=[
+{id:0,t:'studio',n:'Студия · 25 м²',a:25,b:1,p:1800,bg:'Уютная',bc:'b1',g:'g1',e:'🏙️',l:'Тюмень',ad:'ул. Валентины Трофимовой, 8',d:'Уютная студия с прекрасным видом. Полностью оборудована: мебель, техника, посуда, Wi-Fi, свежее бельё. Бесконтактное заселение.',f:['📐 25 м²','🛏 1 кровать','📶 Wi-Fi','🧹 Проф. уборка','🔑 Электронный замок','🧴 Косметика']},
+{id:1,t:'studio',n:'Студия · 34 м²',a:34,b:2,p:1900,bg:'Просторная',bc:'b4',g:'g6',e:'🌙',l:'Тюмень',ad:'ул. Михаила Сперанского, 41',d:'Просторная студия с кухонной зоной. Качественная мебель, всё необходимое для комфортного проживания. Рядом магазины, аптеки.',f:['📐 34 м²','🛏 2 кровати','📶 Wi-Fi','🍳 Кухня','🔑 Электронный замок','🅿️ Парковка']},
+{id:2,t:'1r',n:'1-к. · 35 м²',a:35,b:2,p:1900,bg:'Выгодная',bc:'b2',g:'g7',e:'🏡',l:'Тюмень',ad:'ул. 50 лет Октября, 63Г',d:'Функциональная квартира с кухней, стиральной машиной, шкафами. Развитая инфраструктура, всё рядом.',f:['📐 35 м²','🛏 2 кровати','📶 Wi-Fi','🍳 Кухня','👗 Шкаф','🧺 Стиральная машина']},
+{id:3,t:'1r',n:'1-к. · 36.9 м²',a:37,b:2,p:1900,bg:'Новая',bc:'b2',g:'g4',e:'🌿',l:'Тюмень',ad:'ул. Михаила Сперанского, 37/1',d:'Квартира в новом доме на ул. Михаила Сперанского. Свежий ремонт, вся техника, кухня с посудой.',f:['📐 36.9 м²','🛏 2 кровати','📶 Wi-Fi','🍳 Кухня','🧺 Стиральная машина','🔑 Электронный замок']},
+{id:4,t:'1r',n:'1-к. · 41 м²',a:41,b:2,p:2000,bg:'Комфорт',bc:'b1',g:'g5',e:'🏠',l:'Тюмень',ad:'Профсоюзная ул., 59',d:'Комфортная квартира на Профсоюзной. Всё необходимое для проживания. Рядом магазины, транспорт, аптеки.',f:['📐 41 м²','🛏 2 кровати','📶 Wi-Fi','🍳 Кухня','📺 Smart TV','🔑 Электронный замок']},
+{id:5,t:'1r',n:'1-к. · 42 м²',a:42,b:2,p:2000,bg:'Популярная',bc:'b1',g:'g4',e:'🏢',l:'Тюмень',ad:'ул. Александра Протозанова, 12к1',d:'Чистая квартира на ул. Протозанова. Всё необходимое для комфортного проживания. Документы для командировочных.',f:['📐 42 м²','🛏 2 кровати','📶 Wi-Fi','🍳 Кухня','🅿️ Парковка','📄 Документы']},
+{id:6,t:'1r',n:'1-к. · 42 м²',a:42,b:2,p:2000,bg:'Тёплая',bc:'b4',g:'g2',e:'☀️',l:'Тюмень',ad:'Профсоюзная ул., 63к1',d:'Тёплая и уютная квартира на Профсоюзной 63к1. Рядом магазины, кафе, транспорт. Бесконтактное заселение.',f:['📐 42 м²','🛏 2 кровати','📶 Wi-Fi','🍳 Кухня','🛁 Ванная','🔑 Электронный замок']},
+{id:7,t:'1r',n:'1-к. · 43 м²',a:43,b:2,p:2000,bg:'Красивый вид',bc:'b4',g:'g3',e:'🌆',l:'Тюмень',ad:'Харьковская ул., 74',d:'Уютная квартира на Харьковской. Хорошее расположение, всё в шаговой доступности. Вид из окна — отдельная красота.',f:['📐 43 м²','🛏 2 кровати','📶 Wi-Fi','🍳 Кухня','🌆 Красивый вид','🔑 Электронный замок']},
+{id:8,t:'1r',n:'1-к. · 44 м²',a:44,b:2,p:2000,bg:'Красивый ЖК',bc:'b2',g:'g5',e:'✨',l:'Тюмень',ad:'Профсоюзная ул., 61',d:'Красивая квартира на Профсоюзной. Дистанционное оформление, современный дизайн. Рядом магазины, школы.',f:['📐 44 м²','🛏 2 кровати','📶 Wi-Fi','🍳 Кухня','🏢 Красивый ЖК','📱 Онлайн бронь']},
+{id:9,t:'1r',n:'1-к. · 49 м²',a:49,b:2,p:2100,bg:'Уютная',bc:'b4',g:'g8',e:'💛',l:'Тюмень',ad:'Профсоюзная ул., 63к1',d:'Очень тёплая и уютная квартира. Всё в шаговой доступности: магазины, аптеки, кафе, транспорт. Гости возвращаются снова.',f:['📐 49 м²','🛏 2 кровати','📶 Wi-Fi','🍳 Кухня','🛁 Ванная','📍 Развитый район']},
+{id:10,t:'1r',n:'1-к. · 53 м²',a:53,b:2,p:2100,bg:'Просторная',bc:'b1',g:'g1',e:'🏠',l:'Тюмень',ad:'ул. Монтажников, 61',d:'Просторная квартира на ул. Монтажников. Полностью оборудована для комфортного проживания.',f:['📐 53 м²','🛏 2 кровати','📶 Wi-Fi','🍳 Кухня','📺 Smart TV','🧺 Стирка']},
+{id:11,t:'1r',n:'1-к. · 55 м²',a:55,b:2,p:2100,bg:'Хит продаж',bc:'b3',g:'g3',e:'💫',l:'Тюмень',ad:'ул. Бориса Житкова, 4',d:'Просторная квартира на ул. Бориса Житкова. Продумана до мелочей. Всё необходимое для комфортного проживания.',f:['📐 55 м²','🛏 2 кровати','📶 Wi-Fi','🍳 Кухня','📺 Smart TV','🧴 Премиум косметика']},
+{id:12,t:'1r',n:'1-к. · 63 м²',a:63,b:2,p:2200,bg:'Премиум',bc:'b3',g:'g6',e:'🌟',l:'Тюмень',ad:'ул. 50 лет Октября, 4',d:'Просторная премиальная квартира на ул. 50 лет Октября. Рядом вся инфраструктура. Для долгого проживания и командировок.',f:['📐 63 м²','🛏 2 кровати','📶 Wi-Fi','🍳 Полная кухня','📺 Smart TV','🛁 Большая ванная']},
+{id:13,t:'1r',n:'1-к. · 65 м²',a:65,b:2,p:2200,bg:'Топ',bc:'b3',g:'g5',e:'👑',l:'Тюмень',ad:'ул. Николая Зелинского, 1к1',d:'Фото = реальность. Безупречная чистота. Постельное, полотенца, посуда — без нареканий. Закрытая территория, парковка.',f:['📐 65 м²','🛏 2 кровати','📶 Wi-Fi','🍳 Полная кухня','📺 Smart TV 55"','🛁 Ванная + душ']},
+{id:14,t:'2r',n:'2-к. · 50 м²',a:50,b:2,p:2200,bg:'Для двоих',bc:'b4',g:'g7',e:'💑',l:'Тюмень',ad:'ул. Монтажников, 53',d:'Уютная двушка: отдельная спальня + гостиная. Чисто, всё работает. Развитая инфраструктура.',f:['📐 50 м²','🛏 2 кровати','📶 Wi-Fi','🍳 Кухня','🛋 Гостиная','🛁 Ванная']},
+{id:15,t:'2r',n:'2-к. · 75 м²',a:75,b:4,p:2300,bg:'Для семьи',bc:'b5',g:'g8',e:'👨‍👩‍👧‍👦',l:'Тюмень',ad:'ул. Валентины Трофимовой, 7',d:'Просторная, светлая, тёплая двушка. Идеально для семей с детьми. Всё необходимое. Рядом ТЦ, парки.',f:['📐 75 м²','🛏 4 кровати','📶 Wi-Fi','🍳 Полная кухня','📺 TV','👶 Для семей']}
+];
+const R=[
+{t:'Отличная квартира, спасибо, всё очень понравилось!',ap:'1-к., 55 м², ул. Бориса Житкова, 4',dt:'17 фев 2026'},
+{t:'Красивая чистая квартира, всё дистанционно оформляется. Очень красивый ЖК.',ap:'1-к., 44 м², Профсоюзная ул., 61',dt:'5 фев 2026'},
+{t:'Квартира очень тёплая, уютная. Расположение замечательное, всё необходимое в шаговой доступности. Рады будем вернуться!',ap:'1-к., 49 м², Профсоюзная ул., 63к1',dt:'1 фев 2026'},
+{t:'Просторная, светлая и очень тёплая квартира. Снимали с детьми на 4 дня — всё было. Заселение бесконтактное, очень удобно. Спасибо!',ap:'2-к., 75 м², ул. Валентины Трофимовой, 7',dt:'18 янв 2026'},
+{t:'Фото соответствует действительности. Квартира уютная и чистая. Постельное, полотенца, посуда — всё без нареканий.',ap:'1-к., 65 м², ул. Николая Зелинского, 1к1',dt:'18 янв 2026'},
+{t:'Уютная чистая квартира, с прекрасным видом.',ap:'Студия, 25 м², ул. Валентины Трофимовой, 8',dt:'24 янв 2026'},
+{t:'Отличная чистая, просторная квартира, продумано всё до мелочей!!! Спасибо за гостеприимство!!!',ap:'1-к., 55 м², ул. Бориса Житкова, 4',dt:'12 янв 2026'},
+{t:'В квартире было чисто, уютно и комфортно. Арендодатель отзывчивый. Залог вернули. Всё прекрасно 🫶 Вид из окна — красота!',ap:'1-к., 43 м², Харьковская ул., 74',dt:'15 дек 2025'},
+{t:'Квартира чистая, уютная, всё как на фото. Рекомендую 👍',ap:'2-к., 75 м², ул. Валентины Трофимовой, 7',dt:'24 нояб 2025'},
+{t:'В дороге оформили бронь, заселились — квартира аккуратная, чистая. Арендодатель всегда на связи 🤙',ap:'1-к., 42 м², ул. Александра Протозанова, 12к1',dt:'10 нояб 2025'}
+];
+const FQ=[
+{q:'Во сколько заселение и выселение?',a:'Заселение с 14:00, выселение до 12:00. Раннее/позднее — по договорённости.'},
+{q:'Как заселиться?',a:'Бесконтактно: код электронного замка + инструкция онлайн. Без встреч, за 5 минут.'},
+{q:'Способы оплаты?',a:'Наличные, карта, СБП, безнал для организаций. Возвратный залог при заселении.'},
+{q:'Документы для командировки?',a:'Да — договор, чек, акт выполненных работ. Работаем с ИП и юрлицами.'},
+{q:'Скидки на долгий срок?',a:'От 7 суток: -10%. От 14: -15%. От 30 — индивидуально. Свяжитесь для расчёта.'},
+{q:'Что включено?',a:'Мебель, техника, посуда, Wi-Fi, бельё, полотенца, косметика, фен, утюг, гладильная доска.'}
+];
+
+// TEMPLATES
+function mkApt(a){return`<div class="ac" data-a="u" data-t="${a.t}" onclick="oM(${a.id})">
+<div class="ai"><div class="aib ${a.g}">${a.e}</div>${a.bg?`<span class="ab ${a.bc}">${a.bg}</span>`:''}</div>
+<div class="ain"><h3>${a.n}</h3><div class="aloc">📍 ${a.l}</div><div class="aadr">🏠 ${a.ad}</div>
+<div class="atgs">${a.f.slice(0,4).map(x=>`<span class="atg">${x}</span>`).join('')}</div>
+<div class="adsc">${a.d}</div>
+<div class="aft"><div><div class="apr">от ${a.p.toLocaleString()} ₽</div><div class="ape">за сутки</div></div><span class="btn bp bs">Подробнее</span></div></div></div>`}
+
+function mkRev(r){return`<div class="rc" data-a="u"><div class="rq">"</div><div class="rs">★★★★★</div><div class="rt">${r.t}</div><div class="rm"><div class="ra">Г</div><div><div class="rn">Гость</div><div class="rd">${r.dt}</div></div></div><div class="rap">${r.ap}</div></div>`}
+
+// PAGE NAVIGATION
+let currentPage='home';
+function go(page){
+document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+document.getElementById('page-'+page).classList.add('active');
+document.querySelectorAll('.nl a').forEach(a=>a.classList.remove('act'));
+const navLink=document.querySelector('.nl a[data-page="'+page+'"]');
+if(navLink)navLink.classList.add('act');
+currentPage=page;
+window.scrollTo({top:0,behavior:'instant'});
+// Re-init animations for new page
+setTimeout(initA,100);
+}
+
+// RENDER APARTMENTS
+let cf='all';
+function rA(){
+const arr=cf==='all'?D:D.filter(x=>x.t===cf);
+document.getElementById('aGrid').innerHTML=arr.map(mkApt).join('');
+setTimeout(initA,50);
+}
+document.getElementById('flt').innerHTML=['all','studio','1r','2r'].map(x=>`<span class="filter-btn${cf===x?' act':''}" onclick="cf='${x}';document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('act'));this.classList.add('act');rA()">${x==='all'?'Все (16)':x==='studio'?'Студии (2)':x==='1r'?'1-комнатные (12)':'2-комнатные (2)'}</span>`).join('');
+rA();
+
+// RENDER REVIEWS
+document.getElementById('rGrid').innerHTML=R.map(mkRev).join('');
+
+// RENDER FAQ
+document.getElementById('faqB').innerHTML=FQ.map(x=>`<div class="fi"><div class="fq" onclick="this.parentElement.classList.toggle('op')">${x.q}<span class="fqi">+</span></div><div class="fa">${x.a}</div></div>`).join('');
+
+// MARQUEE
+const mw=['💎 CrystalRentals','⭐ Рейтинг 4.8','🏠 20+ квартир','📍 Тюмень','⚡ Заселение за 5 мин','💳 от 1 800 ₽/сут','📄 Документы для отчёта','💬 Поддержка 24/7'];
+document.getElementById('marqI').innerHTML=(mw.join('<span class="dot2">✦</span>')+' <span class="dot2">✦</span> ').repeat(3);
+
+// MODAL
+window.oM=function(id){
+const a=D.find(x=>x.id===id);if(!a)return;
+document.getElementById('mH').className='mh '+a.g;
+document.getElementById('mH').innerHTML=`<span style="font-size:4.5rem">${a.e}</span>`;
+document.getElementById('mB').innerHTML=`<h2>${a.n}</h2><div class="ml">📍 ${a.l}</div><div class="ma">🏠 ${a.ad}</div><div class="mp">от ${a.p.toLocaleString()} ₽ / сутки</div><div class="mds">${a.d}</div><div class="mfs">${a.f.map(x=>`<div class="mf">${x}</div>`).join('')}</div><a href="https://www.avito.ru/brands/i78514292" target="_blank" class="btn bp" style="width:100%;justify-content:center">💎 Забронировать на Авито</a>`;
+document.getElementById('modal').classList.add('op');document.body.style.overflow='hidden';
+};
+window.cM=function(){document.getElementById('modal').classList.remove('op');document.body.style.overflow=''};
+
+// PARTICLES
+(function(){const c=document.getElementById('pts');for(let i=0;i<35;i++){const p=document.createElement('div');p.className='pt';p.style.left=Math.random()*100+'%';const s=2+Math.random()*6;p.style.width=p.style.height=s+'px';p.style.background=['var(--a2)','var(--a3)','#e879f9','#22d3ee'][Math.floor(Math.random()*4)];p.style.animationDuration=(8+Math.random()*18)+'s';p.style.animationDelay=Math.random()*15+'s';c.appendChild(p)}})();
+
+// SCROLL ANIM
+function initA(){
+const o=new IntersectionObserver(es=>{es.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('v'),i*60);o.unobserve(e.target)}})},{threshold:.1,rootMargin:'0px 0px -30px 0px'});
+document.querySelectorAll('[data-a]:not(.v)').forEach(e=>o.observe(e));
+}
+initA();
+
+// COUNTERS
+(function(){const o=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){const el=e.target,t=parseFloat(el.dataset.c),d=el.hasAttribute('data-d'),s=el.dataset.s||'';let st=performance.now();
+(function tk(n){const p=Math.min((n-st)/2200,1),v=(1-Math.pow(1-p,4))*t;el.textContent=(d?v.toFixed(1):Math.floor(v))+s;if(p<1)requestAnimationFrame(tk)})(st);
+o.unobserve(el)}})},{threshold:.5});
+document.querySelectorAll('.stn[data-c]').forEach(n=>o.observe(n))})();
+
+// NAV + BTT
+window.addEventListener('scroll',()=>{
+document.getElementById('nb').classList.toggle('sc',scrollY>60);
+document.getElementById('btt').classList.toggle('v',scrollY>500);
+});
+</script>
+<script>(function(){var l=location.href;function n(){if(location.href!==l){l=location.href;parent.postMessage({type:'urlChange',url:l},'*')}}setInterval(n,300);window.addEventListener('popstate',n);var p=history.pushState;history.pushState=function(){p.apply(this,arguments);n()};var r=history.replaceState;history.replaceState=function(){r.apply(this,arguments);n()};parent.postMessage({type:'urlChange',url:l},'*')})()</script><script>(function(){var l=location.href;function n(){if(location.href!==l){l=location.href;parent.postMessage({type:'urlChange',url:l},'*')}}setInterval(n,300);window.addEventListener('popstate',n);var p=history.pushState;history.pushState=function(){p.apply(this,arguments);n()};var r=history.replaceState;history.replaceState=function(){r.apply(this,arguments);n()};parent.postMessage({type:'urlChange',url:l},'*')})()</script></body>
+</html>
